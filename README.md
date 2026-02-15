@@ -20,7 +20,7 @@ Lightweight weather dashboard for [tempestd](https://github.com/chadmayfield/tem
 - **Auto-refresh** — polls every 60s, pauses when tab is hidden
 - **Dark/light theme** — auto-switches based on OS preference, fully customizable via CSS variables
 - **PWA** — installable, works offline with cached data
-- **Plugin system** — extend with additional data sources (beehives, air quality, etc.)
+- **Plugin system** — extend with additional data sources (air quality, soil moisture, etc.)
 - **No build step** — serve with any static file server
 
 ## Quick Start
@@ -106,7 +106,7 @@ Edit `plugins.json` to add plugins:
 
 ```json
 [
-    { "name": "beehive", "url": "/plugins/beehive/plugin.js" }
+    { "name": "air-quality", "url": "/plugins/air-quality/plugin.js" }
 ]
 ```
 
