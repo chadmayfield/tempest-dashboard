@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lightweight weather dashboard for tempestd">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src *; img-src 'self' data:; manifest-src 'self'">
+    <title>Tempest Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+
+    <!-- CDN Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"
+            integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"
+            integrity="sha384-cVMg8E3QFwTvGCDuK+ET4PD341jF3W8nO1auiXfuZNQkzbUUiBGLsIQUE+b1mxws"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"
+            integrity="sha384-Cs3dgUx6+jDxxuqHvVH8Onpyj2LF1gKZurLDlhqzuJmUqVYMJ0THTWpxK5Z086Zm"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"
+            integrity="sha384-dwwI6ICEN/0ZQlS5owhUa/6ZzvwUPmjH45bFVCAcjgjTulbHJvlE+TGU3g1k0N3R"
+            crossorigin="anonymous"></script>
+
+    <!-- Custom theme (loaded if present) -->
+    <link rel="stylesheet" href="theme.css" onerror="this.remove()">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Config Banner (visible by default, hidden by JS on successful connect) -->
+        <div id="config-banner" class="config-banner visible">
+            <h2>Connect to tempestd</h2>
+            <p>Enter the URL of your tempestd server to get started.</p>
+            <div class="config-form">
+                <input type="url" id="config-url" placeholder="http://192.168.1.50:8080" aria-label="tempestd server URL">
+                <button id="config-connect">Connect</button>
+            </div>
+            <div id="config-error" class="config-error"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="header-title">Tempest Dashboard</span>
+                <select id="station-select" aria-label="Select station">
+                    <option value="">Loading stations...</option>
+                </select>
+            </div>
+            <div class="header-right">
+                <div class="unit-toggle" role="group" aria-label="Unit system">
+                    <button id="unit-metric" class="active" data-units="metric">Metric</button>
+                    <button id="unit-imperial" data-units="imperial">Imperial</button>
+                </div>
+                <div class="status-indicator">
+                    <span id="status-dot" class="status-dot"></span>
+                    <span id="status-text">Connecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Current Conditions -->
+        <section id="current-conditions" class="current-conditions">
+            <div class="section-title">Current Conditions</div>
+            <div id="stats-grid" class="stats-grid">
+                <!-- Populated by current.js -->
+            </div>
+        </section>
+
+        <!-- Time Range Controls -->
+        <div class="time-controls">
+            <div class="time-presets" role="group" aria-label="Time range">
+                <button data-range="6h">6h</button>
+                <button data-range="24h" class="active">24h</button>
+                <button data-range="7d">7d</button>
+                <button data-range="30d">30d</button>
+                <button data-range="90d">90d</button>
+            </div>
+            <div class="time-custom">
+                <label for="custom-start">From</label>
+                <input type="datetime-local" id="custom-start">
+                <label for="custom-end">To</label>
+                <input type="datetime-local" id="custom-end">
+                <button id="custom-apply">Apply</button>
+            </div>
+        </div>
+
+        <!-- Chart Grid -->
+        <div class="chart-grid">
+            <div class="chart-panel" id="panel-temperature">
+                <div class="chart-title">Temperature</div>
+                <canvas id="chart-temperature"></canvas>
+            </div>
+            <div class="chart-panel" id="panel-humidity">
+                <div class="chart-title">Humidity</div>
+                <canvas id="chart-humidity"></canvas>
+            </div>
+            <div class="chart-panel" id="panel-wind">
+                <div class="chart-title">Wind</div>
+                <canvas id="chart-wind"></canvas>
+            </div>
+            <div class="chart-panel" id="panel-pressure">
+                <div class="chart-title">Pressure</div>
+                <canvas id="chart-pressure"></canvas>
+            </div>
+            <div class="chart-panel" id="panel-rain">
+                <div class="chart-title">Rain</div>
+                <canvas id="chart-rain"></canvas>
+            </div>
+            <div class="chart-panel" id="panel-solar">
+                <div class="chart-title">Solar / UV</div>
+                <canvas id="chart-solar"></canvas>
+            </div>
+        </div>
+
+        <!-- Plugin Sections -->
+        <div id="plugin-sections"></div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span id="last-updated">Last updated: --</span>
+            </div>
+            <div class="footer-right">
+                <span id="refresh-countdown">Next refresh: 60s</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- App Entry Point -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
