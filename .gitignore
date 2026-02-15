@@ -9,5 +9,8 @@
 .DS_Store
 Thumbs.db
 
+# Python
+__pycache__/
+
 # Custom theme (user-specific)
 theme.css
