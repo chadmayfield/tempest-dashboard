@@ -22,7 +22,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install pytest
+        run: pip install pytest pytest-playwright
+
+      - name: Install Playwright browsers
+        run: playwright install --with-deps chromium
 
       - name: Run tests
         run: python -m pytest tests/ -v

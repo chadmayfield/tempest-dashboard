@@ -152,6 +152,39 @@ Plugins execute with full page privileges (same as any JavaScript on the page). 
 - **Input Validation**: Server URLs validated with `URL()` constructor; dates validated before use
 - **No Secrets**: No API keys, tokens, or credentials stored in the frontend
 
+## Development
+
+### Dev Server
+
+The dev server proxies `/api/` requests to a tempestd backend:
+
+```bash
+python3 scripts/serve.py --backend http://localhost:8080
+```
+
+### Testing
+
+The test suite has 158 tests across four categories:
+
+| Category | Tests | What it covers |
+|---|---|---|
+| Static analysis | 85 | HTML structure, JS source patterns, CSP, SRI, security |
+| API proxy | 20 | Mock tempestd responses through the dev server proxy |
+| Browser (Playwright) | 35 | Full runtime: bootstrap, DOM updates, Chart.js, user interactions |
+| Static files | 18 | All files served correctly, manifest/SW validity |
+
+```bash
+# Install dependencies
+pip install pytest pytest-playwright
+playwright install chromium
+
+# Run all tests
+python -m pytest tests/ -v
+
+# Run only browser tests
+python -m pytest tests/test_browser.py -v
+```
+
 ## License
 
 MIT

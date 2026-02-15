@@ -63,3 +63,18 @@ def dashboard_server(backend_url):
 
     proc.terminate()
     proc.wait()
+
+
+@pytest.fixture(scope="module")
+def bootstrapped_page(browser, dashboard_server):
+    """A fully bootstrapped dashboard page shared across tests in a module."""
+    context = browser.new_context(service_workers="block", bypass_csp=True)
+    page = context.new_page()
+    page.goto(dashboard_server)
+    page.wait_for_function(
+        "document.querySelector('#status-text')?.textContent === 'Connected'",
+        timeout=10000,
+    )
+    page.wait_for_selector(".stat-box", timeout=10000)
+    yield page
+    context.close()
